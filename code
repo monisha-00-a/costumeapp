@@ -1,0 +1,47 @@
+import { useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import Mannequin from "./components/Mannequin";
+import CostumeItem from "./components/CostumeItem";
+import { Button } from "@/components/ui/button";
+
+const costumes = [
+  { id: 1, name: "Superhero Suit", model: "/models/superhero_suit.glb" },
+  { id: 2, name: "Pirate Outfit", model: "/models/pirate_outfit.glb" },
+  { id: 3, name: "Medieval Armor", model: "/models/medieval_armor.glb" },
+];
+
+export default function CostumeCheckerApp() {
+  const [selectedCostume, setSelectedCostume] = useState(null);
+  const [color, setColor] = useState("#ffffff");
+
+  return (
+    <div className="flex flex-col items-center p-4">
+      <h1 className="text-2xl font-bold mb-4">Virtual Costume Try-On</h1>
+      <div className="w-full h-[500px] border rounded-lg overflow-hidden">
+        <Canvas camera={{ position: [0, 1.5, 3] }}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[2, 2, 2]} />
+          <Mannequin />
+          {selectedCostume && <CostumeItem model={selectedCostume} color={color} />}
+          <OrbitControls />
+        </Canvas>
+      </div>
+      <div className="flex gap-4 mt-4">
+        {costumes.map((item) => (
+          <Button key={item.id} onClick={() => setSelectedCostume(item.model)}>
+            {item.name}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-4">
+        <label className="mr-2">Select Color:</label>
+        <input
+          type="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+}
